@@ -94,9 +94,9 @@ void PWMDriver::setPWM(myByte servoNumber, myShort on, myShort off){
   this->i2cWrite8(__LED0_OFF_H + 4*servoNumber, off >> 8);
 }
 void PWMDriver::setAllPWM(myShort on, myShort off){
-  this->i2cWrite8(__ALL_LED_ON_L, on & 0xFF);
+  this->i2cWrite8(__ALL_LED_ON_L, on & 0xff);
   this->i2cWrite8(__ALL_LED_ON_H, on >> 8);
-  this->i2cWrite8(__ALL_LED_OFF_L, off & 0xFF);
+  this->i2cWrite8(__ALL_LED_OFF_L, off & 0xff);
   this->i2cWrite8(__ALL_LED_OFF_H, off >> 8);
 }
 
