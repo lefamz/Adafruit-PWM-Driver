@@ -7,20 +7,24 @@ void PWMDriver::openDevice(){
     exit(EXIT_FAILURE);
   }
 
+  // binding the device on bus address as a slave
   if(ioctl(f, I2C_SLAVE, address) < 0){
     cerr << "Binding I2C slave device failed!" << endl;
     exit(EXIT_FAILURE);
   }
 
+  // reset all servos
   this->setAllPWM(0, 0);
- 
+  
+  // enable open drain on all leds
   this->i2cWrite8(__MODE2, __OUTDRV);
+  // to achieve that PCA9685 responds to LED All Call I2C-bus address
   this->i2cWrite8(__MODE1, __ALLCALL);
 
   usleep(5000); // wait for oscillator
 
   myByte mode1 = this->i2cRead8(__MODE1);
-  mode1 = mode1 & (~__SLEEP); // wake up, reset sleep
+  mode1 = mode1 & (~__SLEEP); // turn on oscilator
   this->i2cWrite8(__MODE1, mode1);
 
   usleep(5000); // wait for oscillator
