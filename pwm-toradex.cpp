@@ -13,7 +13,7 @@ void PWMDriver::openDevice(){
     exit(EXIT_FAILURE);
   }
 
-  // reset all servos
+   // reset all servos
   this->setAllPWM(0, 0);
   
   // enable open drain on all leds
@@ -28,6 +28,8 @@ void PWMDriver::openDevice(){
   this->i2cWrite8(__MODE1, mode1);
 
   usleep(5000); // wait for oscillator
+
+  cout << "Mode1: " << i2cRead8(__MODE1) << " Mode2: " << i2cRead8(__MODE2) << endl;
     
 }
 
@@ -41,6 +43,11 @@ void PWMDriver::closeDevice(){
 myByte PWMDriver::i2cRead8(myByte reg){
   myByte buf[2];
   memset(buf,0,2);
+
+  // we want to read from register reg
+  buf[0]=reg;
+  write(f,buf,1);
+ 
   
   if( read(f,buf,1) != 1){
     cerr << "Reading from I2C device failed!" << endl;
@@ -97,6 +104,7 @@ void PWMDriver::setPWM(myByte servoNumber, myShort on, myShort off){
   this->i2cWrite8(__LED0_OFF_L + 4*servoNumber,off & 0xff);
   this->i2cWrite8(__LED0_OFF_H + 4*servoNumber, off >> 8);
 }
+
 void PWMDriver::setAllPWM(myShort on, myShort off){
   this->i2cWrite8(__ALL_LED_ON_L, on & 0xff);
   this->i2cWrite8(__ALL_LED_ON_H, on >> 8);
